@@ -215,6 +215,12 @@ bool Ekf::initialiseFilter()
 	bool hgt_count_fail = _hgt_counter <= 2u * _obs_buffer_length;
 	bool mag_count_fail = _mag_counter <= 2u * _obs_buffer_length;
 
+	#ifdef __PX4_POSIX_BEBOP_DAMAGED
+	// Damaged Bebop2 doesn't have a magnometer and barometer, init without hgt/mag.
+	hgt_count_fail = false;
+	mag_count_fail = false;
+	#endif
+
 	if (hgt_count_fail || mag_count_fail) {
 		return false;
 
